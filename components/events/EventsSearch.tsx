@@ -35,30 +35,30 @@ function EventsSearch({ onSearch }: PropsType) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-3/4 flex flex-col md:flex-row  justify-between mx-auto bg-stone-50 px-4 py-3 rounded-lg mt-10"
+      className="  w-3/4 lg:w-4/5 flex flex-col lg:flex-row justify-center items-center gap-2  lg:justify-between mx-auto bg-stone-50 px-4 py-3 rounded-lg mt-10"
     >
-      <div className="flex  justify-center items-center gap-8 mb-2 md:mb-0">
-        <div className="text-lg flex gap-3 items-center">
-          <label htmlFor="year" className="font-semibold">
+      <div className="flex flex-col lg:flex-row justify-center w-4/5 lg:w-auto items-center gap-8 mb-2 md:mb-0">
+        <div className="text-lg flex gap-3 items-center  w-full justify-between  ">
+          <label htmlFor="year" className="font-semibold w-16">
             Year
           </label>
           <select
             ref={yearRef}
             id="year"
-            className="border border-stone-700 rounded-md md:w-48 p-1"
+            className="border border-stone-700 rounded-md w-full lg:w-52 p-1 "
           >
             <option value="2021">2021</option>
             <option value="2022">2022</option>
           </select>
         </div>
-        <div className="text-lg flex gap-3 items-center">
-          <label htmlFor="month" className="font-semibold">
+        <div className="text-lg flex gap-3 items-center w-full justify-between  ">
+          <label htmlFor="month" className="font-semibold w-16">
             Month
           </label>
           <select
             ref={monthRef}
             id="month"
-            className="border border-stone-700 rounded-md md:w-48 p-1"
+            className="border border-stone-700 rounded-md w-full lg:w-52 p-1 "
           >
             {months.map((month) => (
               <option key={month.id} value={month.id}>
@@ -68,9 +68,11 @@ function EventsSearch({ onSearch }: PropsType) {
           </select>
         </div>
       </div>
-      <Button type="button" href={``}>
-        Find Events
-      </Button>
+      <div>
+        <Button type="button" href={``}>
+          Find Events
+        </Button>
+      </div>
     </form>
   );
 }

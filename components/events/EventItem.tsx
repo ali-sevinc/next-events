@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import {
   MapPinIcon,
   CalendarDaysIcon,
@@ -17,11 +19,14 @@ function EventItem({ event }: PropsType) {
   const formatedAddress = changeAddress?.(location);
 
   return (
-    <li className="w-full sm:max-w-[720px] h-64 sm:h-56 flex rounded-xl bg-white relative shadow-md">
-      <img
+    <li className="w-full sm:max-w-[720px] h-64 lg:h-72 flex flex-row lg:flex-col rounded-xl bg-white relative shadow-md">
+      <Image
         src={"/" + image}
+        priority={true}
         alt={title}
-        className="w-2/5 h-full object-fill rounded-l-xl"
+        width={480}
+        height={360}
+        className="w-2/5 lg:w-full h-full lg:h-1/2 object-cover rounded-l-xl lg:rounded-t-xl lg:rounded-l-none"
       />
       <div className="p-4">
         <h2 className="text-xl font-bold pb-4">{title}</h2>

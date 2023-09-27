@@ -9,7 +9,7 @@ interface PropsType {
 }
 
 const styles =
-  "text-xl bg-green-400 hover:bg-green-600 duration-200 text-stone-200  px-6 py-2 rounded-xl  flex items-center justify-center gap-2";
+  "sm:text-xl bg-green-400 hover:bg-green-600 duration-200 text-stone-200 px-2 py-1  sm:px-6 sm:py-2 rounded-xl  flex items-center justify-center gap-2";
 
 function Button({ children, href, type, onClick }: PropsType) {
   if (type === "button")
