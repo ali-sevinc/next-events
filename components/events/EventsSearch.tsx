@@ -28,19 +28,16 @@ function EventsSearch({ onSearch }: PropsType) {
     e.preventDefault();
     const year = Number(yearRef.current?.value);
     const month = Number(monthRef.current?.value);
-    const query = {
-      year,
-      month,
-    };
+
     onSearch(year, month);
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-3/4 flex justify-between mx-auto bg-stone-50 px-4 py-3 rounded-lg mt-10"
+      className="w-3/4 flex flex-col md:flex-row  justify-between mx-auto bg-stone-50 px-4 py-3 rounded-lg mt-10"
     >
-      <div className="flex justify-center items-center gap-8">
+      <div className="flex  justify-center items-center gap-8 mb-2 md:mb-0">
         <div className="text-lg flex gap-3 items-center">
           <label htmlFor="year" className="font-semibold">
             Year
@@ -48,7 +45,7 @@ function EventsSearch({ onSearch }: PropsType) {
           <select
             ref={yearRef}
             id="year"
-            className="border border-stone-700 rounded-md w-48 p-1"
+            className="border border-stone-700 rounded-md md:w-48 p-1"
           >
             <option value="2021">2021</option>
             <option value="2022">2022</option>
@@ -61,7 +58,7 @@ function EventsSearch({ onSearch }: PropsType) {
           <select
             ref={monthRef}
             id="month"
-            className="border border-stone-700 rounded-md w-48 p-1"
+            className="border border-stone-700 rounded-md md:w-48 p-1"
           >
             {months.map((month) => (
               <option key={month.id} value={month.id}>
