@@ -83,6 +83,8 @@
 // export default FilteredEventsPage;
 
 //---------------CLIENT SIDE RENDER------------------------//
+import Head from "next/head";
+
 import { useRouter } from "next/router";
 import useSearched from "@/hooks/useSearched";
 
@@ -97,9 +99,28 @@ function FilteredEventsPage() {
   const month = Number(router?.query?.slug?.[1]);
   const { error, events, isLoading } = useSearched({ year, month });
 
-  if (error) return <Fallback>{error}</Fallback>;
+  const pageHead = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta name="description" content={`All events for ${month}/${year}`} />
+    </Head>
+  );
 
-  if (isLoading) return <Loader />;
+  if (error)
+    return (
+      <>
+        {pageHead}
+        <Fallback>{error}</Fallback>;
+      </>
+    );
+
+  if (isLoading)
+    return (
+      <>
+        {pageHead}
+        <Loader />;
+      </>
+    );
 
   if (
     isNaN(year) ||
@@ -109,16 +130,27 @@ function FilteredEventsPage() {
     month < 1 ||
     month > 12
   ) {
-    return <Fallback>Invalid search queries...</Fallback>;
+    return (
+      <>
+        {pageHead}
+        <Fallback>Invalid search queries...</Fallback>;
+      </>
+    );
   }
   const date = new Date(year, month - 1);
 
   if (!events.length) {
-    return <Fallback>No event found...</Fallback>;
+    return (
+      <>
+        {pageHead}
+        <Fallback>No event found...</Fallback>;
+      </>
+    );
   }
 
   return (
     <>
+      {pageHead}
       <SearchResult date={date} />
       <EventList events={events} />;
     </>

@@ -1,3 +1,5 @@
+import Head from "next/head";
+
 import { getFeatured } from "@/helpers/apis";
 import { Event } from "@/helpers/types";
 
@@ -16,6 +18,10 @@ function HomePage({ featured, error }: PropsType) {
 
   return (
     <div>
+      <Head>
+        <title>NextJS Events</title>
+        <meta name="description" content="Find a lot of great events..." />
+      </Head>
       <EventList events={featured} />
     </div>
   );

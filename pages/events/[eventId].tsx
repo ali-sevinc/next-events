@@ -1,3 +1,5 @@
+import Head from "next/head";
+
 import { getEvent, getFeatured } from "@/helpers/apis";
 import { GetStaticPropsContext } from "next";
 import { Event } from "@/helpers/types";
@@ -15,7 +17,15 @@ function EventDetailsPage({ event, error }: PropsType) {
   if (error) return <Fallback>{error}</Fallback>;
   if (!event) return <Loader />;
 
-  return <EventDetails event={event} />;
+  return (
+    <>
+      <Head>
+        <title>{event?.title}</title>
+        <meta name="description" content={event?.description} />
+      </Head>
+      <EventDetails event={event} />;
+    </>
+  );
 }
 
 export async function getStaticProps(context: GetStaticPropsContext) {
