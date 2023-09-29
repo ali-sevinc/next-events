@@ -7,16 +7,24 @@ import { Event } from "@/helpers/types";
 import Loader from "@/components/ui/Loader";
 import Fallback from "@/components/ui/Fallback";
 import EventDetails from "@/components/events/eventdetails/EventDetails";
+import Comments from "@/components/input/Comments";
 
 interface PropsType {
   event: Event;
   error: string | null;
+  eventId: string;
+  commentsData: {
+    commentId: string;
+    email: string;
+    name: string;
+    text: string;
+  };
 }
 
-function EventDetailsPage({ event, error }: PropsType) {
+function EventDetailsPage({ event, error, eventId, commentsData }: PropsType) {
   if (error) return <Fallback>{error}</Fallback>;
   if (!event) return <Loader />;
-
+  // console.log(eventId);
   return (
     <>
       <Head>
@@ -24,6 +32,7 @@ function EventDetailsPage({ event, error }: PropsType) {
         <meta name="description" content={event?.description} />
       </Head>
       <EventDetails event={event} />;
+      <Comments eventId={eventId} />
     </>
   );
 }
@@ -37,6 +46,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     props: {
       event: data,
       error: error,
+      eventId: id,
     },
     revalidate: 120,
   };

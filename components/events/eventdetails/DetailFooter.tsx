@@ -1,6 +1,6 @@
 function DetailFooter({ children }: { children: React.ReactNode }) {
   return (
-    <div className="absolute top-[720px] lg:top-[520px] max-w-[720px]">
+    <div className="max-w-[720px] mx-12 md:mx-auto ">
       <p className="text-lg font-semibold text-center">{children}</p>
     </div>
   );

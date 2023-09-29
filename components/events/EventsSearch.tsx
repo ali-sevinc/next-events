@@ -35,7 +35,7 @@ function EventsSearch({ onSearch }: PropsType) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="  w-3/4 lg:w-4/5 flex flex-col lg:flex-row justify-center items-center gap-2  lg:justify-between mx-auto bg-stone-50 px-4 py-3 rounded-lg mt-10"
+      className="  w-3/4 lg:w-4/5 flex flex-col lg:flex-row justify-center items-center gap-2  lg:justify-between mx-auto bg-stone-50 sm:px-4 py-3 rounded-lg mt-10"
     >
       <div className="flex flex-col lg:flex-row justify-center w-4/5 lg:w-auto items-center gap-8 mb-2 md:mb-0">
         <div className="text-lg flex gap-3 items-center  w-full justify-between  ">

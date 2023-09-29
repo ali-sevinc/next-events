@@ -6,6 +6,7 @@ import { Event } from "@/helpers/types";
 import EventList from "@/components/events/EventList";
 import Fallback from "@/components/ui/Fallback";
 import Loader from "@/components/ui/Loader";
+import NewsletterRegistration from "@/components/input/NewsletterRegistration";
 
 interface PropsType {
   featured: Event[];
@@ -22,6 +23,7 @@ function HomePage({ featured, error }: PropsType) {
         <title>NextJS Events</title>
         <meta name="description" content="Find a lot of great events..." />
       </Head>
+      <NewsletterRegistration />
       <EventList events={featured} />
     </div>
   );

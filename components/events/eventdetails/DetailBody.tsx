@@ -12,7 +12,7 @@ function DetailBody({ image, date, location, title }: PropsType) {
   const readableDate = changeDate?.(date);
   const formatedAddress = changeAddress?.(location);
   return (
-    <div className=" mx-4 lg:mx-auto flex flex-col md:flex-row bg-stone-700 p-8 rounded-2xl max-w-[680px] absolute top-48 z-10 ">
+    <div className=" mx-4 lg:mx-auto flex flex-col md:flex-row bg-stone-700 p-8 rounded-2xl max-w-[680px] translate-y-[-3rem] ">
       <Image
         src={"/" + image}
         priority={true}
