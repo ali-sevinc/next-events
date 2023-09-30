@@ -1,28 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
-import fs from "fs";
-import path from "path";
 import { emailRegex } from "@/components/input/NewsletterRegistration";
-
-export function getCommentsFilePath() {
-  const filePath = path.join(process.cwd(), "data", "comments.json");
-  return filePath;
-}
-
-export function getCommentsData(filePath: string) {
-  const fileData = fs.readFileSync(filePath);
-  const data = JSON.parse(fileData.toString());
-  return data;
-}
+import { connection, inserting } from "@/helpers/db-utils";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const filePath = getCommentsFilePath();
-    const data = getCommentsData(filePath);
-    const id = req.body.id;
+    const eventId = req.body.id;
     const email = req.body.email;
     const name = req.body.name;
     const text = req.body.text;
@@ -34,39 +19,38 @@ export default async function handler(
       name.trim().length < 2 ||
       text.trim().length < 2
     ) {
-      const selectedComments = data.find(
-        (item: { id: string }) => item.id === id
-      );
       res
         .status(422)
-        .json({ message: "Entered values not valid", data: selectedComments });
+        .json({ message: "Entered values not valid", comment: {} });
       return;
     }
 
-    if (data.find((item: { id: string }) => item.id === id)) {
-      data
-        .find((item: { id: string }) => item.id === id)
-        .body.push({
-          commentId: crypto.randomUUID(),
-          email,
-          name,
-          text,
-        });
-    } else {
-      data.push({
-        id,
-        body: [
-          {
-            commentId: crypto.randomUUID(),
-            email,
-            name,
-            text,
-          },
-        ],
-      });
+    const comment: {
+      eventId: string;
+      email: string;
+      name: string;
+      text: string;
+    } = {
+      eventId,
+      email,
+      name,
+      text,
+    };
+    let client;
+    try {
+      client = await connection();
+    } catch (error) {
+      res.status(500).json({ message: "Connectin data base failed..." });
+      return;
     }
-    fs.writeFileSync(filePath, JSON.stringify(data));
-    const addedData = data.find((item: { id: string }) => item.id === id);
-    res.status(201).json({ message: "Success", data: addedData });
+    try {
+      await inserting("events", client, "comments", comment);
+      res.status(201).json({ message: "Success", comment });
+    } catch (error) {
+      res.status(500).json({ message: "Inserting data failed..." });
+      return;
+    } finally {
+      client.close();
+    }
   }
 }

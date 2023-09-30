@@ -19,3 +19,5 @@ export function changeAddress(address: string) {
   const formatedAddress = address.replace(", ", "\n");
   return formatedAddress;
 }
+
+export const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;

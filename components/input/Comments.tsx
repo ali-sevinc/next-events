@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 
+import { CommentType } from "@/helpers/types";
+
 import CommentList from "./CommentList";
 import NewComment from "./NewComment";
-
-type CommentType = { email: string; name: string; text: string };
+import useAddComment from "./useAddComment";
 
 interface PropsType {
   eventId: string;
@@ -11,40 +12,38 @@ interface PropsType {
 
 function Comments({ eventId }: PropsType) {
   const [showComments, setShowComments] = useState<boolean>(false);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<CommentType[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { addComment, error } = useAddComment();
 
   function toggleCommentsHandler() {
     setShowComments((prevStatus) => !prevStatus);
   }
 
-  function addCommentHandler(commentData: CommentType) {
+  async function addCommentHandler(commentData: CommentType) {
     const body = {
       id: eventId,
       ...commentData,
     };
-
-    fetch("/api/comments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then((res) => res.json())
-      .then((resData) => {
-        const updatedData = resData?.data?.body;
-        setComments(updatedData);
-      });
+    setIsLoading(true);
+    const data = await addComment(body);
+    setIsLoading(false);
+    if (data) {
+      setComments((prev) => [...prev, data]);
+    }
   }
 
   useEffect(
     function () {
       async function getData() {
         if (showComments) {
+          setIsLoading(true);
           const res = await fetch("/api/comments/" + eventId);
           const data = await res.json();
-          const selectedComments = data?.selectedComments?.body;
+          const selectedComments = data?.selectedComments;
           setComments(selectedComments);
+          setIsLoading(false);
         }
       }
       getData();
@@ -60,13 +59,25 @@ function Comments({ eventId }: PropsType) {
       >
         {showComments ? "Hide" : "Show"} Comments
       </button>
-      {showComments && <NewComment onAddComment={addCommentHandler} />}
-      {showComments && comments?.length > 0 && (
+      {showComments && (
+        <NewComment isLoading={isLoading} onAddComment={addCommentHandler} />
+      )}
+      {showComments && comments?.length > 0 && !isLoading && (
         <CommentList comments={comments} />
       )}
-      {showComments && !comments?.length && (
+      {showComments && isLoading && (
         <p className="py-4 border-b border-b-stone-400 text-lg font-semibold italic">
-          No comment found yet!
+          Loading....
+        </p>
+      )}
+      {showComments && !comments?.length && !isLoading && !error && (
+        <p className="py-4 border-b border-b-stone-400 text-lg font-semibold italic">
+          No comment found !
+        </p>
+      )}
+      {showComments && !comments?.length && !isLoading && error && (
+        <p className="py-4 border-b text-red-500 border-b-stone-400 text-lg font-semibold italic">
+          {error}
         </p>
       )}
     </section>

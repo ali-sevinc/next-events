@@ -1,9 +1,12 @@
 import { FormEvent, useState } from "react";
 
-export const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+import { emailRegex } from "@/helpers/fncs";
+
+import useNewsletter from "./useNewsletter";
 
 function NewsletterRegistration() {
   const [email, setEmail] = useState<string>("");
+  const { addNewsletter, data, error } = useNewsletter();
 
   function registrationHandler(event: FormEvent) {
     event.preventDefault();
@@ -11,18 +14,8 @@ function NewsletterRegistration() {
       return;
     }
     const body = { email };
-    fetch("/api/news-letter", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setEmail("");
-        console.log(data);
-      });
+    addNewsletter(body);
+    setEmail("");
   }
 
   return (
@@ -30,6 +23,7 @@ function NewsletterRegistration() {
       <h2 className="text-center font-bold pt-6 pb-4">
         Sign up to stay updated!
       </h2>
+
       <form onSubmit={registrationHandler}>
         <div className="flex">
           <input
@@ -46,6 +40,10 @@ function NewsletterRegistration() {
           </button>
         </div>
       </form>
+      {error && <p className="text-center text-xs text-red-500">{error}</p>}
+      {data && (
+        <p className="text-center text-xs text-green-500">Successfully added</p>
+      )}
     </section>
   );
 }

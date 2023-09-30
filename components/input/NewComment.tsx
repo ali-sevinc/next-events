@@ -1,5 +1,7 @@
 import { useRef, useState, FormEvent } from "react";
-import { emailRegex } from "./NewsletterRegistration";
+
+import { emailRegex } from "@/helpers/fncs";
+
 interface PropsType {
   onAddComment: ({
     email,
@@ -9,10 +11,13 @@ interface PropsType {
     email: string;
     name: string;
     text: string;
+    eventId?: string;
+    _id?: string;
   }) => void;
+  isLoading: boolean;
 }
 
-function NewComment({ onAddComment }: PropsType) {
+function NewComment({ onAddComment, isLoading }: PropsType) {
   const [isInvalid, setIsInvalid] = useState(false);
 
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -96,7 +101,12 @@ function NewComment({ onAddComment }: PropsType) {
         ></textarea>
       </div>
       {isInvalid && <p>Please enter a valid email address and comment!</p>}
-      <button className="text-white hover:text-green-700">Submit</button>
+      <button
+        className="text-green-500 px-2 py-1 rounded-md bg-stone-200 hover:text-green-700 disabled:hover-none disabled:text-stone-500 "
+        disabled={isLoading}
+      >
+        {isLoading ? "Submitting..." : "Submit"}
+      </button>
     </form>
   );
 }

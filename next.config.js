@@ -3,6 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   env: {
     FIREBASE: process.env.FIREBASE,
+    MONGO: process.env.MONGO,
   },
 };
 

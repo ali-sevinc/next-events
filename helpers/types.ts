@@ -7,3 +7,11 @@ export interface Event {
   image: string;
   isFeatured: boolean;
 }
+
+export type CommentType = {
+  email: string;
+  name: string;
+  text: string;
+  eventId?: string;
+  _id?: string;
+};
