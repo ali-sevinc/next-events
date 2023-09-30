@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 
 import { CommentType } from "@/helpers/types";
 
+import { useNotification } from "@/context/notification-context";
+
 import CommentList from "./CommentList";
 import NewComment from "./NewComment";
 import useAddComment from "./useAddComment";
+import Loader from "../ui/Loader";
 
 interface PropsType {
   eventId: string;
@@ -13,9 +16,11 @@ interface PropsType {
 function Comments({ eventId }: PropsType) {
   const [showComments, setShowComments] = useState<boolean>(false);
   const [comments, setComments] = useState<CommentType[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { addComment, error } = useAddComment();
+  const { showNotification, notification } = useNotification();
+  const pending = notification?.status === "pending";
+
+  const addComment = useAddComment();
 
   function toggleCommentsHandler() {
     setShowComments((prevStatus) => !prevStatus);
@@ -26,9 +31,7 @@ function Comments({ eventId }: PropsType) {
       id: eventId,
       ...commentData,
     };
-    setIsLoading(true);
     const data = await addComment(body);
-    setIsLoading(false);
     if (data) {
       setComments((prev) => [...prev, data]);
     }
@@ -38,17 +41,34 @@ function Comments({ eventId }: PropsType) {
     function () {
       async function getData() {
         if (showComments) {
-          setIsLoading(true);
+          showNotification({
+            title: "Loading...",
+            message: "Comments data loading...",
+            status: "pending",
+          });
           const res = await fetch("/api/comments/" + eventId);
-          const data = await res.json();
-          const selectedComments = data?.selectedComments;
-          setComments(selectedComments);
-          setIsLoading(false);
+          if (!res.ok) {
+            const errData = await res.json();
+            showNotification({
+              title: "Error",
+              message: errData.message || "Ops.. Something went wrong...",
+              status: "error",
+            });
+          } else {
+            const data = await res.json();
+            const selectedComments = data?.selectedComments;
+            showNotification({
+              title: "Success",
+              message: "Comments successfully loaded",
+              status: "success",
+            });
+            setComments(selectedComments);
+          }
         }
       }
       getData();
     },
-    [eventId, showComments]
+    [eventId, showComments, showNotification]
   );
 
   return (
@@ -60,24 +80,15 @@ function Comments({ eventId }: PropsType) {
         {showComments ? "Hide" : "Show"} Comments
       </button>
       {showComments && (
-        <NewComment isLoading={isLoading} onAddComment={addCommentHandler} />
+        <NewComment isLoading={pending} onAddComment={addCommentHandler} />
       )}
-      {showComments && comments?.length > 0 && !isLoading && (
+      {showComments && comments?.length > 0 && !pending && (
         <CommentList comments={comments} />
       )}
-      {showComments && isLoading && (
-        <p className="py-4 border-b border-b-stone-400 text-lg font-semibold italic">
-          Loading....
-        </p>
-      )}
-      {showComments && !comments?.length && !isLoading && !error && (
+      {showComments && pending && <Loader />}
+      {showComments && !comments?.length && !pending && (
         <p className="py-4 border-b border-b-stone-400 text-lg font-semibold italic">
           No comment found !
-        </p>
-      )}
-      {showComments && !comments?.length && !isLoading && error && (
-        <p className="py-4 border-b text-red-500 border-b-stone-400 text-lg font-semibold italic">
-          {error}
         </p>
       )}
     </section>

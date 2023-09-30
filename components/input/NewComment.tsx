@@ -1,19 +1,10 @@
 import { useRef, useState, FormEvent } from "react";
 
 import { emailRegex } from "@/helpers/fncs";
+import { CommentType } from "@/helpers/types";
 
 interface PropsType {
-  onAddComment: ({
-    email,
-    name,
-    text,
-  }: {
-    email: string;
-    name: string;
-    text: string;
-    eventId?: string;
-    _id?: string;
-  }) => void;
+  onAddComment: ({}: CommentType) => void;
   isLoading: boolean;
 }
 

@@ -86,7 +86,7 @@
 import Head from "next/head";
 
 import { useRouter } from "next/router";
-import useSearched from "@/hooks/useSearched";
+import useSearched from "@/components/input/useSearched";
 
 import SearchResult from "@/components/events/SearchResult";
 import EventList from "@/components/events/EventList";

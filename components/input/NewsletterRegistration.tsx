@@ -6,15 +6,17 @@ import useNewsletter from "./useNewsletter";
 
 function NewsletterRegistration() {
   const [email, setEmail] = useState<string>("");
-  const { addNewsletter, data, error } = useNewsletter();
+  const { addNewsletter } = useNewsletter();
 
-  function registrationHandler(event: FormEvent) {
+  async function registrationHandler(event: FormEvent) {
     event.preventDefault();
     if (!email || !emailRegex.test(email)) {
       return;
     }
     const body = { email };
-    addNewsletter(body);
+
+    await addNewsletter(body);
+
     setEmail("");
   }
 
@@ -40,10 +42,6 @@ function NewsletterRegistration() {
           </button>
         </div>
       </form>
-      {error && <p className="text-center text-xs text-red-500">{error}</p>}
-      {data && (
-        <p className="text-center text-xs text-green-500">Successfully added</p>
-      )}
     </section>
   );
 }

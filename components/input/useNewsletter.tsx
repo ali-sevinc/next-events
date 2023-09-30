@@ -1,9 +1,18 @@
 import { useState } from "react";
 
+import { useNotification } from "@/context/notification-context";
+
 function useNewsletter() {
-  const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState();
+
+  const { showNotification } = useNotification();
+
   async function addNewsletter(body: { email: string }) {
+    showNotification({
+      title: "Sending...",
+      message: "Registering....",
+      status: "pending",
+    });
     const res = await fetch("/api/news-letter", {
       method: "POST",
       headers: {
@@ -11,16 +20,25 @@ function useNewsletter() {
       },
       body: JSON.stringify(body),
     });
-    if (res.status === 500) {
+    if (!res.ok) {
       const errData = await res.json();
-      setError(errData.message);
-      return;
+      showNotification({
+        title: "Error",
+        message: errData?.message || "Ops.. Something went wrong...",
+        status: "error",
+      });
+    } else {
+      const data = await res.json();
+      showNotification({
+        title: "Success",
+        message: "Successfully signed up!",
+        status: "success",
+      });
+      setData(data);
     }
-    const data = await res.json();
-    setData(data);
   }
 
-  return { error, data, addNewsletter };
+  return { data, addNewsletter };
 }
 
 export default useNewsletter;

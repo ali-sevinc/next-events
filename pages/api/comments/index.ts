@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { emailRegex } from "@/components/input/NewsletterRegistration";
 import { connection, inserting } from "@/helpers/db-utils";
+import { emailRegex } from "@/helpers/fncs";
 
 export default async function handler(
   req: NextApiRequest,
